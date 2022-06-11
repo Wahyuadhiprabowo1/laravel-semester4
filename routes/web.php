@@ -137,3 +137,14 @@ Route::get('collection_wherein', 'App\Http\Controllers\DataPeminjamController@co
 Route::get('collection_toarray', 'App\Http\Controllers\DataPeminjamController@collection_toarray');
 
 Route::get('collection_tojson', 'App\Http\Controllers\DataPeminjamController@collection_tojson');
+
+// Jobsheet 11
+Route::get('peminjaman', 'App\Http\Controllers\PeminjamanController@index');
+
+Route::get('peminjaman/create', 'App\Http\Controllers\PeminjamanController@create')->name('peminjaman.create');
+
+Route::post('peminjaman/store', 'App\Http\Controllers\PeminjamanController@store')->name('peminjaman.store');
+
+Route::get('peminjaman/detail_peminjam/{id}', 'App\Http\Controllers\PeminjamanController@detail_peminjam')->name('peminjaman.detail_peminjam');
+
+Route::get('peminjaman/detail_buku/{id}', 'App\Http\Controllers\PeminjamanController@detail_buku')->name('peminjaman.detail_buku');
