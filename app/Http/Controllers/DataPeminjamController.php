@@ -9,13 +9,21 @@ use App\Models\Telepon;
 
 // jobsheet9
 use App\Models\JenisKelamin;
+use phpDocumentor\Reflection\DocBlock\Tags\See;
+// Jobsheet 12
+use Session;
+// Jobsheet 13 
+use Storage;
 
 class DataPeminjamController extends Controller
 {
     public function index(){
-        $data_peminjam = DataPeminjam::all()->sortBy('nama_peminjam');
-        $jumlah_peminjam = $data_peminjam->count();
-        return view('data_peminjam.index', compact('data_peminjam','jumlah_peminjam'));
+        // Jobsheet 12
+        $jumlah_peminjam = DataPeminjam::count();
+        $data_peminjam = DataPeminjam::orderBy('id', 'asc')->paginate(3);
+        $no = 0;
+
+        return view('data_peminjam.index', compact('data_peminjam','no', 'jumlah_peminjam'));
     }
 
     public function create(){
@@ -25,6 +33,21 @@ class DataPeminjamController extends Controller
     }
 
     public function store(Request $request){
+        // Jobsheet 12
+        $this->validate($request, [
+            'kode_peminjam' => 'required|string',
+            'nama_peminjam' => 'required|string|max:30',
+            'tanggal_lahir' => 'required|date'
+        ]);
+        // Jobsheet 13
+        $this->validate($request, [
+           'foto' => 'required|image|mimes:jpeg,jpg,png',
+        ]);
+
+        $foto_peminjam = $request->foto;
+        $nama_file = time().'.'.$foto_peminjam->getClientOriginalExtension();
+        $foto_peminjam->move('foto_peminjam/', $nama_file);
+
         $data_peminjam = new DataPeminjam;
         $data_peminjam->kode_peminjam = $request->kode_peminjam;
         $data_peminjam->nama_peminjam = $request->nama_peminjam;
@@ -33,11 +56,15 @@ class DataPeminjamController extends Controller
         $data_peminjam->tanggal_lahir = $request->tanggal_lahir;
         $data_peminjam->alamat = $request->alamat;
         $data_peminjam->pekerjaan = $request->pekerjaan;
+        $data_peminjam->foto = $nama_file;
         $data_peminjam->save();
 
         $telepon = new Telepon;
         $telepon->nomor_telepon = $request->telepon;
         $data_peminjam->telepon()->save($telepon);
+
+        // Jobsheet 12
+        Session::flash('flash_message', 'Data peminjam berhasil disimpan');
         return redirect('data_peminjam');
     }
 
@@ -49,44 +76,69 @@ class DataPeminjamController extends Controller
         $list_jenis_kelamin = JenisKelamin::pluck('nama_jenis_kelamin','id_jenis_kelamin'); //jobsheet9
         return view('data_peminjam.edit', compact('peminjam', 'list_jenis_kelamin'));
     }
-
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $data_peminjam = DataPeminjam::find($id);
-        $data_peminjam->kode_peminjam = $request->kode_peminjam;
-        $data_peminjam->nama_peminjam = $request->nama_peminjam;
-        $data_peminjam->id_jenis_kelamin = $request->id_jenis_kelamin;
-        $data_peminjam->tanggal_lahir = $request->tanggal_lahir;
-        $data_peminjam->alamat = $request->alamat;
-        $data_peminjam->pekerjaan = $request->pekerjaan;
-        $data_peminjam->update();
-        // Jobsheet 9
-        //update nomor telepon, jika sebelumnya sudah ada nomor telepon
-        if($data_peminjam->telepon){
-            //jika telepon diisi, maka update
-            if($request->filled('nomor_telepon')){
+        if ($request->has('foto')) {
+            $foto_peminjam = $request->foto;
+            $nama_file = time().'.'.$foto_peminjam->getClientOriginalExtension();
+            $foto_peminjam->move('foto_peminjam/', $nama_file);
+            
+            $data_peminjam->kode_peminjam = $request->kode_peminjam;
+            $data_peminjam->nama_peminjam = $request->nama_peminjam;
+            $data_peminjam->id_jenis_kelamin = $request->id_jenis_kelamin;
+            $data_peminjam->tanggal_lahir = $request->tanggal_lahir;
+            $data_peminjam->alamat = $request->alamat;
+            $data_peminjam->pekerjaan = $request->pekerjaan;
+            $data_peminjam->foto = $nama_file;
+            $data_peminjam->update();
+        } else {
+            $data_peminjam->kode_peminjam = $request->kode_peminjam;
+            $data_peminjam->nama_peminjam = $request->nama_peminjam;
+            $data_peminjam->id_jenis_kelamin = $request->id_jenis_kelamin;
+            $data_peminjam->tanggal_lahir = $request->tanggal_lahir;
+            $data_peminjam->alamat = $request->alamat;
+            $data_peminjam->pekerjaan = $request->pekerjaan;
+            $data_peminjam->update();
+        }
+
+        if ($data_peminjam->telepon) {
+            if ($request->filled('nomor_telepon')) {
                 $telepon = $data_peminjam->telepon;
                 $telepon->nomor_telepon = $request->input('nomor_telepon');
                 $data_peminjam->telepon()->save($telepon);
-            }
-            else{
+            } else {
                 $data_peminjam->telepon()->delete();
             }
-        }
-        //buat entry baru, jika sebelumnya tidak ada nomor telepon
-        else{
-            if($request->filled('nomor_telepon')){
+        } else {
+            if ($request->filled('nomor_telepon')) {
                 $telepon = new Telepon;
                 $telepon->nomor_telepon = $request->nomor_telepon;
                 $data_peminjam->telepon()->save($telepon);
             }
         }
+
+        Session::flash('flash_message_update', 'Data peminjam berhasil diupdate');
+
         return redirect('data_peminjam');
     }
 
     public function destroy($id){
         $data_peminjam = DataPeminjam::find($id);
         $data_peminjam->delete();
+
+        Session::flash('flash_message', 'Data peminjam berhasil dihapus');
+        Session::flash('penting', true);
         return redirect('data_peminjam');
+    }
+
+    // Jobsheet 12
+    public function search(Request $request) {
+        $batas = 3;
+        $cari = $request->kata;
+        $data_peminjam = DataPeminjam::where("nama_peminjam", "like", "%".$cari."%")->paginate($batas);
+        $no = $batas * ($data_peminjam->currentPage() - 1);
+        return view('data_peminjam.search', compact('data_peminjam', 'no', 'cari'));    
     }
 
     public function CobaCollection(){

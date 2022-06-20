@@ -34,5 +34,6 @@
             jumlah Peminjaman : {{ $jumlah_peminjaman }}
         </strong>
     </div>
+
 </div>
 @endsection

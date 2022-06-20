@@ -10,7 +10,7 @@
                 <tr>
                     <th>No</th>
                     <th>Nama Peminjam</th>
-                                     
+                                    
                 </tr>
             </thead>
             <tbody>

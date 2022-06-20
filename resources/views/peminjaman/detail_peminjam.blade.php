@@ -10,8 +10,8 @@
                 <tr>
                     <th>No</th>
                     <th>Judul Buku yang di Pinjam</th>
-                   
-                  
+                
+                
                 </tr>
             </thead>
             <tbody>

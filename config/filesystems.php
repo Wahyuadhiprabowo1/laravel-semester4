@@ -29,6 +29,11 @@ return [
     */
 
     'disks' => [
+        // Jobsheet 13
+        'foto_peminjam' => [
+            'driver' => 'local',
+            'root' => public_path('foto_peminjam'),
+        ],
 
         'local' => [
             'driver' => 'local',

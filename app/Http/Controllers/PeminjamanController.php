@@ -17,7 +17,7 @@ class PeminjamanController extends Controller
         $jumlah_peminjaman = $data_peminjaman->count();
         return view('peminjaman.index', compact('data_peminjaman','jumlah_peminjaman'));
     }
-
+ 
     public function create(){
         // jobsheet 11
         $list_data_peminjam = DataPeminjam::pluck('nama_peminjam', 'id');

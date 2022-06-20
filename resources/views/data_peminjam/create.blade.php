@@ -2,8 +2,16 @@
 @section('content')
     <div class="container">
         <h4>Tambah Data Peminjam</h4>
-
-        <form method="POST" action="{{ route('data_peminjam.store') }}">
+        {{-- Jobsheet 12 --}}
+        @if(count($errors) > 0)
+        @foreach($errors->all() as $error)
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <div>{{ $error }}</div>
+            </div>
+        @endforeach
+    @endif
+            {{-- Jobsheet 13 --}}
+        <form method="POST" action="{{ route('data_peminjam.store') }}" enctype="multipart/form-data" > 
             @csrf
                 <div class="form-group">
                     <label>Kode Peminjam</label>
@@ -30,6 +38,12 @@
                     <label>Telepon</label>
                     <input type="text" name="telepon" class="form-control">
                 </div>
+                {{-- Joobshee5 12
+                     --}}
+                     <div class="form-group">
+                        <label>Foto</label>
+                        <input type="file" name="foto" class="form-control">
+                    </div>
                 <div class="form-group">
                     {{-- Jobsheet 9 --}}
                     <label>Jenis Kelamin</label><br>

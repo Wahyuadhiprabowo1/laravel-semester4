@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <h4>Edit Data Peminjam</h4>
-        <form method="POST" action="{{ route('data_peminjam.update', $peminjam->id) }}">
+        <form method="POST" action="{{ route('data_peminjam.update', $peminjam->id) }}" enctype="multipart/form-data">
         @csrf
             <div class="form-group">
                 <label>Kode Peminjam</label>
@@ -38,7 +38,11 @@
                         <option value="{{ $key }}" {{ $peminjam->id_jenis_kelamin == $key ? 'selected' : '' }}>{{ $value }}</option>    
                     @endforeach
                 </select>
-                 {{-- jobsheet 9 --}}
+                 {{-- jobsheet 13 --}}
+            </div>
+            <div class="form-group">
+                <label>Foto</label>
+                <input type="file" name="foto" class="form-control" value="{{ $peminjam->nomor_telepon }}">
             </div>
             <div>
                 <button type="submit">Simpan</button>
