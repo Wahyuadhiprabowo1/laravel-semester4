@@ -42,7 +42,7 @@
             </div>
             <div class="form-group">
                 <label>Foto</label>
-                <input type="file" name="foto" class="form-control" value="{{ $peminjam->nomor_telepon }}">
+                <input type="file" name="foto" class="form-control">
             </div>
             <div>
                 <button type="submit">Simpan</button>

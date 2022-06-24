@@ -77,7 +77,7 @@ class DataPeminjamController extends Controller
         return view('data_peminjam.edit', compact('peminjam', 'list_jenis_kelamin'));
     }
     public function update(Request $request, $id)
-    {
+    {   //Jobsheet 13
         $data_peminjam = DataPeminjam::find($id);
         if ($request->has('foto')) {
             $foto_peminjam = $request->foto;
@@ -118,7 +118,7 @@ class DataPeminjamController extends Controller
             }
         }
 
-        Session::flash('flash_message_update', 'Data peminjam berhasil diupdate');
+        Session::flash('flash_message', 'Data peminjam berhasil diupdate');
 
         return redirect('data_peminjam');
     }

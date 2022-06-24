@@ -38,7 +38,7 @@
                     <label>Telepon</label>
                     <input type="text" name="telepon" class="form-control">
                 </div>
-                {{-- Joobshee5 12
+                {{-- Joobshee5 13
                      --}}
                      <div class="form-group">
                         <label>Foto</label>
